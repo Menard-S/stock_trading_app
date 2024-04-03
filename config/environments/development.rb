@@ -75,13 +75,13 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 587,
-    domain: 'gmail.com',
-    user_name: 'menard.seguenza@gmail.com',
-    password: 'oghlsgjhtzhlavly',
-    authentication: 'plain',
-    enable_starttls_auto: true
-  }
+    address: Rails.application.credentials.smtp_settings[:address],
+    port: Rails.application.credentials.smtp_settings[:port],
+    domain: Rails.application.credentials.smtp_settings[:domain],
+    user_name: Rails.application.credentials.smtp_settings[:user_name],
+    password: Rails.application.credentials.smtp_settings[:password],
+    authentication: Rails.application.credentials.smtp_settings[:authentication],
+    enable_starttls_auto: Rails.application.credentials.smtp_settings[:enable_starttls_auto]
+  }  
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 end
