@@ -15,7 +15,6 @@ class User < ApplicationRecord
   after_initialize :set_default_role_and_status, if: :new_record?
   after_create :send_admin_mail
   after_create :send_pending_approval_email
-  after_update :send_activation_email_if_approved
 
   def active_for_authentication? 
     super && approved?
@@ -44,12 +43,5 @@ class User < ApplicationRecord
 
   def send_pending_approval_email
     UserMailer.pending_approval(self).deliver_now
-  end
-
-  def send_activation_email_if_approved
-    if saved_change_to_status? && approved?
-      Rails.logger.info "Sending activation email to #{email}"
-      UserMailer.account_activation(self).deliver_now
-    end
   end
 end
