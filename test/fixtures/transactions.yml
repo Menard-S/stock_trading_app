@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  stock: MyString
+  quantity: 1
+  transaction_type: MyString
+  price: 9.99
+  timestamp: 2024-04-02 13:54:48
+
+two:
+  user: two
+  stock: MyString
+  quantity: 1
+  transaction_type: MyString
+  price: 9.99
+  timestamp: 2024-04-02 13:54:48
