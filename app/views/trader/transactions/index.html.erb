@@ -1,0 +1,26 @@
+<h2>Transaction History</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Type</th>
+      <th>Shares</th>
+      <th>Transaction Price</th>
+      <th>Running Balance</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% running_balance = current_user.asset %>
+    <% @transactions.each do |transaction| %>
+      <% running_balance += transaction.share * transaction.transaction_price * (transaction.transaction_type == 'sell' ? 1 : -1) %>
+      <tr>
+        <td><%= transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td><%= transaction.transaction_type.capitalize %></td>
+        <td><%= transaction.share %></td>
+        <td><%= number_to_currency(transaction.transaction_price) %></td>
+        <td><%= number_to_currency(running_balance) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

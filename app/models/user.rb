@@ -13,8 +13,7 @@ class User < ApplicationRecord
   validate :at_least_18
 
   after_initialize :set_default_role_and_status, if: :new_record?
-  after_create :send_admin_mail
-  after_create :send_pending_approval_email
+  after_create :send_admin_mail, :send_pending_approval_email
 
   def active_for_authentication? 
     super && approved?

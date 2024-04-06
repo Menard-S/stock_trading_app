@@ -1,0 +1,36 @@
+  <h2>User: <%= @user.name %></h2>
+  <h3>Adjusted Asset Balance: <%= number_to_currency(@asset_balance) %></h3>
+
+<%= form_with url: trader_fetch_stock_path, method: :get, remote: true, id: 'stock_select_form' do |f| %>
+  <%= f.label :symbol, 'Select a Stock' %>
+  <%= f.select :symbol, @active_stocks.map { |s| [s[:company_name], s[:symbol]] }, { include_blank: true }, onchange: 'this.form.submit();' %>
+<% end %>
+
+<div id="stock_details"></div>
+
+<script>
+  document.addEventListener("ajax:success", (event) => {
+    const [data, status, xhr] = event.detail;
+    document.getElementById('stock_details').innerHTML = xhr.responseText;
+  });
+</script>
+
+<p><%= link_to 'Transaction history',  trader_transactions_path, method: :get %></p>
+
+<% @user_portfolio.each do |portfolio_item| %>
+  <div>
+    <p>
+      <%= link_to portfolio_item.stock.symbol, trader_fetch_stock_path(symbol: portfolio_item.stock.symbol), remote: true %>
+    </p>
+    <p>Shares: <%= portfolio_item.share %></p>
+
+    <% last_transaction = portfolio_item.stock.transactions.order(timestamp: :desc).first %>
+    <% if last_transaction.present? %>
+      <p>Transaction Price: <%= number_to_currency(last_transaction.transaction_price) %></p>
+      <p>Transaction Type: <%= last_transaction.transaction_type.capitalize %></p>
+      <p>Market Value: <%= number_to_currency(portfolio_item.share * last_transaction.transaction_price) %></p>
+    <% else %>
+      <p>No transactions found.</p>
+    <% end %>
+  </div>
+<% end %>
