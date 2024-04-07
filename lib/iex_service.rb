@@ -4,22 +4,18 @@ class IexService
   def self.fetch_iex_symbols
     client = IEX::Api::Client.new
     begin
-      symbols = client.ref_data_symbols
-      if symbols.empty?
-        Rails.logger.error 'IEX symbols list is empty.'
-        return []
-      end
-      symbols.map do |symbol|
+      client.stock_market_list('mostactive').first(10).map do |stock|
         {
-          symbol: symbol.symbol,
-          name: symbol.name
+          symbol: stock.symbol,
+          name: stock.company_name,
+          latest_price: stock.latest_price
         }
       end
     rescue StandardError => e
-      Rails.logger.error "Error fetching IEX symbols: #{e.message}"
+      Rails.logger.error "Error fetching active stocks: #{e.message}"
       []
     end
-  end
+  end  
 
   #Top 10 stocks in Home
   def self.fetch_top_symbols(list_type = 'mostactive')
@@ -61,7 +57,7 @@ class IexService
   def self.fetch_active_stocks
     client = IEX::Api::Client.new
     begin
-      client.stock_market_list('mostactive').first(25).map do |stock|
+      client.stock_market_list('mostactive').first(10).map do |stock|
         {
           symbol: stock.symbol,
           company_name: stock.company_name,

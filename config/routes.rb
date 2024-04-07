@@ -22,8 +22,6 @@ Rails.application.routes.draw do
     get 'portfolio', to: 'portfolio#show'
     get 'portfolio/fetch_stock', to: 'portfolio#fetch_stock', as: :fetch_stock
     post 'portfolio', to: 'portfolio#process_order'
-    post 'portfolio/buy', to: 'portfolio#buy'
-    post 'portfolio/sell', to: 'portfolio#sell'
     get 'transactions', to: 'transactions#index'
   end
 end

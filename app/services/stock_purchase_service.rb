@@ -5,6 +5,10 @@ class StockPurchaseService < BaseService
       stock = Stock.find_or_create_by(symbol: symbol)
       
       price = IexService.fetch_quote(symbol)[:latest_price]
+      Rails.logger.debug "Price for #{symbol}: #{price}"
+
+      stock.closing_price = price
+      stock.save!
       
       total_cost = price * quantity
       
