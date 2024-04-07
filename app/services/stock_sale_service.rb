@@ -20,6 +20,16 @@ class StockSaleService < BaseService
       end
 
       price = IexService.fetch_quote(symbol)[:latest_price]
+      Rails.logger.debug "Price for #{symbol}: #{price}"
+
+      stock.closing_price = price
+      stock.save!
+
+      total_cost = price * quantity
+
+      @user.asset += total_cost
+      @user.save!
+
       create_transaction(stock, quantity, 'sell', price)
       return { success: true, message: "Successfully sold #{quantity} shares of #{symbol}" }
     end

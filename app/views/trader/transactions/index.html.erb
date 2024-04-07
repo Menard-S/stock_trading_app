@@ -1,25 +1,35 @@
 <h2>Transaction History</h2>
+<p><%= link_to 'Back to portfolio trading',  trader_portfolio_path, method: :get %></p>
 
 <table>
   <thead>
     <tr>
-      <th>Date</th>
+      <th>Date and Time</th>
+      <th>Balance before Transaction</th>
       <th>Type</th>
+      <th>Stock</th>
       <th>Shares</th>
       <th>Transaction Price</th>
-      <th>Running Balance</th>
+      <th>Current Balance</th> 
     </tr>
   </thead>
   <tbody>
-    <% running_balance = current_user.asset %>
+    <% balance_before_transaction = current_user.asset %>
+    <% logger.debug "Initial running balance: #{balance_before_transaction}" %>
     <% @transactions.each do |transaction| %>
-      <% running_balance += transaction.share * transaction.transaction_price * (transaction.transaction_type == 'sell' ? 1 : -1) %>
+      <% amount_changed = transaction.share * transaction.stock.closing_price %>
+      <% balance_before_transaction += amount_changed * (transaction.transaction_type == 'sell' ? -1 : 1) %>
+      <% logger.debug "Transaction: #{transaction.transaction_type}, Shares: #{transaction.share}, Price: #{transaction.stock.closing_price}, New Running Balance: #{balance_before_transaction}" %>
       <tr>
         <td><%= transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') %></td>
+        <td><%= number_to_currency(balance_before_transaction) %></td>
         <td><%= transaction.transaction_type.capitalize %></td>
+        <td>
+          <%= link_to transaction.stock.symbol, trader_fetch_stock_path(symbol: transaction.stock.symbol), remote: true %>
+        </td>
         <td><%= transaction.share %></td>
         <td><%= number_to_currency(transaction.transaction_price) %></td>
-        <td><%= number_to_currency(running_balance) %></td>
+        <td><%= number_to_currency(balance_before_transaction  + (transaction.transaction_type == 'sell' ? transaction.transaction_price : -transaction.transaction_price)) %></td>
       </tr>
     <% end %>
   </tbody>
