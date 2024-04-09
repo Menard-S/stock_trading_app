@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_06_044104) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_07_163516) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_06_044104) do
     t.integer "share"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "closing_price", precision: 10, scale: 2
+    t.decimal "gains", precision: 10, scale: 2
     t.index ["stock_id"], name: "index_portfolios_on_stock_id"
     t.index ["user_id"], name: "index_portfolios_on_user_id"
   end
@@ -29,7 +31,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_06_044104) do
     t.string "company"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.decimal "closing_price", precision: 10, scale: 2
+    t.decimal "current_price", precision: 10, scale: 2
     t.index ["symbol"], name: "index_stocks_on_symbol", unique: true
   end
 

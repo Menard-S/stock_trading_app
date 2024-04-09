@@ -1,6 +1,6 @@
 class Trader::PortfolioController < Trader::BaseController
   def show
-    @active_stocks = IexService.fetch_active_stocks
+    @active_stocks = IexService.fetch_iex_symbols
     @user_portfolio = @user.portfolios.includes(:stock)
   end
 
