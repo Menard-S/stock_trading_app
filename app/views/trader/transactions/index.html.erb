@@ -13,24 +13,19 @@
       <th>Current Balance</th> 
     </tr>
   </thead>
-  <tbody>
-    <% balance_before_transaction = current_user.asset %>
-    <% logger.debug "Initial running balance: #{balance_before_transaction}" %>
-    <% @transactions.each do |transaction| %>
-      <% amount_changed = transaction.share * transaction.stock.closing_price %>
-      <% balance_before_transaction += amount_changed * (transaction.transaction_type == 'sell' ? -1 : 1) %>
-      <% logger.debug "Transaction: #{transaction.transaction_type}, Shares: #{transaction.share}, Price: #{transaction.stock.closing_price}, New Running Balance: #{balance_before_transaction}" %>
-      <tr>
-        <td><%= transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') %></td>
-        <td><%= number_to_currency(balance_before_transaction) %></td>
-        <td><%= transaction.transaction_type.capitalize %></td>
-        <td>
-          <%= link_to transaction.stock.symbol, trader_fetch_stock_path(symbol: transaction.stock.symbol), remote: true %>
-        </td>
-        <td><%= transaction.share %></td>
-        <td><%= number_to_currency(transaction.transaction_price) %></td>
-        <td><%= number_to_currency(balance_before_transaction  + (transaction.transaction_type == 'sell' ? transaction.transaction_price : -transaction.transaction_price)) %></td>
-      </tr>
-    <% end %>
-  </tbody>
+<tbody>
+  <% @transactions.each do |transaction| %>
+    <tr>
+      <td><%= transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') %></td>
+      <td><%= number_to_currency(@transaction_balances[transaction.id][:before]) %></td>
+      <td><%= transaction.transaction_type.capitalize %></td>
+      <td>
+        <%= link_to transaction.stock.symbol, trader_fetch_stock_path(symbol: transaction.stock.symbol), remote: true %>
+      </td>
+      <td><%= transaction.share %></td>
+      <td><%= number_to_currency(transaction.transaction_price) %></td>
+      <td><%= number_to_currency(@transaction_balances[transaction.id][:after]) %></td>
+    </tr>
+  <% end %>
+</tbody>
 </table>

@@ -1,9 +1,11 @@
   <h2>User: <%= @user.name %></h2>
   <h3>Adjusted Asset Balance: <%= number_to_currency(@asset_balance) %></h3>
 
+  <p><%= link_to 'Back to homepage', root_path, method: :get %></p>
+
 <%= form_with url: trader_fetch_stock_path, method: :get, remote: true, id: 'stock_select_form' do |f| %>
   <%= f.label :symbol, 'Select a Stock' %>
-  <%= f.select :symbol, @active_stocks.map { |s| [s[:company_name], s[:symbol]] }, { include_blank: true }, onchange: 'this.form.submit();' %>
+  <%= f.select :symbol, @active_stocks.map { |s| [s[:symbol], s[:symbol]] }, { include_blank: true }, onchange: 'this.form.submit();' %>
 <% end %>
 
 <div id="stock_details"></div>
@@ -23,6 +25,8 @@
       <%= link_to portfolio_item.stock.symbol, trader_fetch_stock_path(symbol: portfolio_item.stock.symbol), remote: true %>
     </p>
     <p>Shares: <%= portfolio_item.share %></p>
+    <p>Current Price: <%= number_to_currency(portfolio_item.stock.current_price) %></p>
+    <p>Gains: <%= number_to_currency(portfolio_item.gains) %></p>
 
     <% last_transaction = portfolio_item.stock.transactions.order(timestamp: :desc).first %>
     <% if last_transaction.present? %>
