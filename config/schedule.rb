@@ -8,7 +8,7 @@ env :PATH, ENV['PATH']
 set :environment, 'development'
 set :output, 'log/cron.log'
 
-every 1.minute do
+every 15.minutes do
   rake "stock:update_prices"
   rake "portfolio:update_gains"
 end
