@@ -10,5 +10,10 @@ class UserMailer < ApplicationMailer
     @user = user
     mail(to: @user.email, subject: 'Your account has been activated')
   end
+
+  def verification_link(user)
+    @user = user
+    mail(to: @user.email, subject: "Verify your account")
+  end
 end
   

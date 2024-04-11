@@ -9,6 +9,8 @@ class User < ApplicationRecord
   enum role: { trader: 0, admin: 1 }
   enum status: { pending: 0, approved: 1, rejected: 2 }
 
+  validates :email, presence: true
+  validates :name, presence: true
   validates :yob, presence: true, numericality: { only_integer: true }
   validate :at_least_18
 
