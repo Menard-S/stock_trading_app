@@ -9,11 +9,14 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root 'home#index'
   namespace :admin do
-    resources :users do
+    resources :traders, only: [:new, :create] # Define routes for new and create actions
+    resources :users do 
+      get 'transactions'
       member do
         patch 'activate', to: 'users#activate_user'
       end
     end
     get 'dashboard', to: 'dashboard#index', as: :dashboard
+    get 'users/:id/edit', to: 'users#edit', as: :edit_admin_user
   end  
 end
