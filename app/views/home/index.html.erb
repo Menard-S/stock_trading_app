@@ -1,9 +1,12 @@
 <h1>Welcome to the Stock Trading App!</h1>
 
 <% if user_signed_in? %>
-  <p>Hello, <%= current_user.email %>!</p>
+  <p>Hello, <%= current_user.name %>!</p>
   <% if current_user.admin? %>
     <p><%= link_to 'Go to admin dashboard', admin_dashboard_path, method: :get %></p>
+  <% elsif current_user.trader? %>
+    <p><%= link_to 'I want to start trading', trader_portfolio_path, method: :get %></p>
+    <p><%= link_to 'I want to see my transactions history', trader_transactions_path, method: :get %></p>
   <% end %>
   <p><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></p>
 <% else %>
@@ -18,7 +21,7 @@
       <% @iex_symbols.each_slice(1).with_index do |slice, index| %>
         <li class="stock-group <%= 'active' if index == 0 %>" style="<%= 'display: none;' unless index == 0 %>">
           <% slice.each do |symbol| %>
-            <%= "#{symbol[:symbol]} - #{symbol[:name]}" %><br>
+            <%= "#{symbol[:symbol]} - #{symbol[:name]} - #{symbol[:latest_price]}" %><br>
           <% end %>
         </li>
       <% end %>
@@ -36,8 +39,9 @@
     groups[current].style.display = 'none';
     current = (current + 1) % groups.length;
     groups[current].style.display = 'block';
-  }, 2000);
+  }, 1000);
 </script>
+
 
 
 <h1>Top 10 Stocks</h1>

@@ -1,27 +1,27 @@
 class IexService
 
+  def self.client
+    @client ||= IEX::Api::Client.new
+  end
+
+  # Stocks We Support ticker in Home
   def self.fetch_iex_symbols
-    client = IEX::Api::Client.new
     begin
-      symbols = client.ref_data_symbols
-      if symbols.empty?
-        Rails.logger.error 'IEX symbols list is empty.'
-        return []
-      end
-      symbols.map do |symbol|
+      client.stock_market_list('mostactive').first(10).map do |stock|
         {
-          symbol: symbol.symbol,
-          name: symbol.name
+          symbol: stock.symbol,
+          name: stock.company_name,
+          latest_price: stock.latest_price
         }
       end
     rescue StandardError => e
-      Rails.logger.error "Error fetching IEX symbols: #{e.message}"
+      Rails.logger.error "Error fetching active stocks: #{e.message}"
       []
     end
-  end
+  end  
 
+  #Top 10 stocks in Home
   def self.fetch_top_symbols(list_type = 'mostactive')
-    client = IEX::Api::Client.new
     client.stock_market_list(list_type).first(10).map do |quote|
       {
         symbol: quote.symbol,
@@ -38,8 +38,8 @@ class IexService
     []
   end
 
-  def self.fetch_stock_market_list(list_type)
-    client = IEX::Api::Client.new
+  #Stock market list in Home
+  def self.fetch_stock_market_list(list_type = 'mostactive')
     client.stock_market_list(list_type).map do |data|
       {
         symbol: data.symbol,
@@ -51,6 +51,38 @@ class IexService
       }
     end
   rescue StandardError => e
+    Rails.logger.error "Error fetching stock market list: #{e.message}"
     []
+  end
+
+  #Stocks selector in trader portfolio
+  def self.fetch_active_stocks
+    begin
+      client.stock_market_list('mostactive').first(10).map do |stock|
+        {
+          symbol: stock.symbol,
+        }
+      end
+    rescue StandardError => e
+      Rails.logger.error "Error fetching active stocks: #{e.message}"
+      []
+    end
+  end
+
+  #Stock details displayer in stock details partial
+  def self.fetch_quote(symbol)
+    begin
+      quote = client.quote(symbol)
+      logo = client.logo(symbol)
+      {
+        symbol: quote.symbol,
+        company_name: quote.company_name,
+        latest_price: quote.latest_price,
+        logo_url: logo.url
+      }
+    rescue StandardError => e
+      Rails.logger.error "Error fetching quote for symbol #{symbol}: #{e.message}"
+      nil
+    end
   end
 end
