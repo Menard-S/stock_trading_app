@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action 
+
   def activate_user
     user = User.find(params[:id])
     if user.update(status: :approved)
@@ -8,6 +8,12 @@ class Admin::UsersController < Admin::BaseController
     else
       redirect_to admin_dashboard_path, alert: "There was a problem activating the user."
     end
+  end
+
+  def deactivate_user
+    @user = User.find(params[:id])
+    @user.deactivate! # Assuming you have a deactivate method in your User model
+    redirect_to admin_dashboard_path, notice: "User deactivated successfully."
   end
 
   def index
@@ -20,9 +26,9 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def create
-    @trader = User.new(trader_params)
+    @trader = User.new(trader_params.merge(invited_by_admin: true))
     if @trader.save
-      UserMailer.verification_link(@trader).deliver_now
+      UserMailer.invitation_email(@trader).deliver_now
       redirect_to admin_dashboard_path, notice: 'Trader was successfully created.'
     else
       render :new
@@ -61,6 +67,6 @@ class Admin::UsersController < Admin::BaseController
   private
 
   def trader_params
-    params.require(:trader).permit(:email, :name, :yob, :asset, :password, :password_confirmation)
+    params.require(:user).permit(:email, :name, :yob, :asset, :password, :password_confirmation, :invited_by_admin)
   end
 end
