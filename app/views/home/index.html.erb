@@ -1,97 +1,147 @@
-<h1>Welcome to the Stock Trading App!</h1>
+<div class="container mt-3">
+  <h1>
+    <%= image_tag 'side board.png', alt: 'Equisphere Logo', class: 'logo-inline' %> Welcome to the EquiSphere!
+  </h1>
 
-<% if user_signed_in? %>
-  <p>Hello, <%= current_user.name %>!</p>
-  <% if current_user.admin? %>
-    <p><%= link_to 'Go to admin dashboard', admin_dashboard_path, method: :get %></p>
-  <% elsif current_user.trader? %>
-    <p><%= link_to 'I want to start trading', trader_portfolio_path, method: :get %></p>
-    <p><%= link_to 'I want to see my transactions history', trader_transactions_path, method: :get %></p>
-  <% end %>
-  <p><%= link_to 'Sign out', destroy_user_session_path, method: :delete %></p>
-<% else %>
-  <p><%= link_to 'Sign in', new_user_session_path %></p>
-  <p><%= link_to 'Sign up', new_user_registration_path %></p>
-<% end %>
+    <% if user_signed_in? %>
+      <% alert_class = @total_gains.positive? ? 'alert-info' : 'alert-danger' %>
+      <div class="alert <%= alert_class %>">
+        <p>Hello, <%= current_user.name %>!</p>
+        <% if current_user.admin? %>
+          <p>Since you are holding insider data, you are prohibited from trading on the platform.</p>
+        <% else %>
+        <% if @total_gains.negative? %>
+        <p>As of today, you lost a total of <%= number_to_currency(@total_gains.abs) %>. Your buying power is <%= number_to_currency(@asset_balance) %></p>
+        <% elsif @total_gains.positive? %>
+          <p>As of today, you gained a total of <%= number_to_currency(@total_gains) %>. Your buying power is <%= number_to_currency(@asset_balance) %></p>
+        <% else %>
+          <p>As of today, your portfolio has no gains or losses. Your buying power is <%= number_to_currency(@asset_balance) %></p>
+        <% end %>
+      <% end %>  
+      </div>
 
-<div>
-  <h2>Stocks We Support</h2>
-  <% if @iex_symbols.any? %>
-    <ul id="stock-list">
-      <% @iex_symbols.each_slice(1).with_index do |slice, index| %>
-        <li class="stock-group <%= 'active' if index == 0 %>" style="<%= 'display: none;' unless index == 0 %>">
-          <% slice.each do |symbol| %>
-            <%= "#{symbol[:symbol]} - #{symbol[:name]} - #{symbol[:latest_price]}" %><br>
-          <% end %>
-        </li>
+      <% if current_user.admin? %>
+        <%= link_to 'Go to admin dashboard', admin_dashboard_path, method: :get, class: 'btn btn-success' %>
+      <% elsif current_user.trader? %>
+        <%= link_to 'I want to start trading', trader_portfolio_path, method: :get, class: 'btn btn-primary' %>
+        <%= link_to 'I want to see my transactions history', trader_transactions_path, method: :get, class: 'btn btn-secondary' %>
       <% end %>
-    </ul>
-  <% else %>
-    <p>No stock data available.</p>
-  <% end %>
-</div>
+      <%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'btn btn-danger' %>
+    <% else %>
+      <%= link_to 'Sign in', new_user_session_path, class: 'btn btn-primary' %>
+      <%= link_to 'Sign up', new_user_registration_path, class: 'btn btn-secondary' %>
+    <% end %>
+
+  <div class="mt-4">
+    <h2>Stocks We Support</h2>
+    <% if @iex_symbols.any? %>
+      <div class="list-group" id="stock-list">
+        <% @iex_symbols.each_with_index do |symbol, index| %>
+          <a href="#" class="list-group-item list-group-item-action <%= 'active' if index == 0 %>" style="<%= 'display: none;' unless index == 0 %>">
+            <span style="color: #ffffff; font-weight: bold;"><%= symbol[:symbol] %></span>
+            - <span style="font-style: italic;"><%= symbol[:name] %></span>
+            - <span style="color: #FFD700; font-weight: bold;"><%= symbol[:latest_price] %></span>
+          </a>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="alert alert-warning">No stock data available.</div>
+    <% end %>
+  </div>
 
 <script>
-  const groups = document.querySelectorAll('.stock-group');
-  let current = 0;
+  let intervalId;
 
-  setInterval(() => {
-    groups[current].style.display = 'none';
-    current = (current + 1) % groups.length;
-    groups[current].style.display = 'block';
-  }, 1000);
+  function updateStockDisplay(stocks, currentIndex) {
+    stocks.forEach(stock => stock.style.display = 'none');
+    
+    const currentStock = stocks[currentIndex];
+    currentStock.style.display = 'block';
+    currentStock.classList.add('active');
+  }
+
+  document.addEventListener("turbo:load", function() {
+    const stocks = document.querySelectorAll('#stock-list .list-group-item');
+    let current = 0;
+
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
+
+    updateStockDisplay(stocks, current);
+
+    intervalId = setInterval(() => {
+      stocks[current].classList.remove('active');
+      stocks[current].style.display = 'none';
+
+      current = (current + 1) % stocks.length;
+
+      updateStockDisplay(stocks, current);
+    }, 1500);
+  });
 </script>
 
 
+    <h1 class="mt-4">Top 10 Stocks</h1>
+    <% if @top_symbols.any? %>
+      <table class="table table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Symbol</th>
+            <th>Company Name</th>
+            <th>Primary Exchange</th>
+            <th>Open</th>
+            <th>Close</th>
+            <th>Latest Volume</th>
+            <th>Market Cap</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @top_symbols.each do |stock| %>
+          <tr>
+            <td><%= stock[:symbol].presence || "Not Available" %></td>
+            <td><%= stock[:company_name].presence || "Not Available" %></td>
+            <td><%= stock[:primary_exchange].presence || "Not Available" %></td>
+            <td><%= stock[:open].blank? ? "Not Available" : number_to_currency(stock[:open]) %></td>
+            <td><%= stock[:close].blank? ? "Not Available" : number_to_currency(stock[:close]) %></td>
+            <td><%= stock[:latest_volume].blank? ? "Not Available" : number_with_delimiter(stock[:latest_volume]) %></td>
+            <td><%= stock[:market_cap].blank? ? "Not Available" : number_to_currency(stock[:market_cap]) %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="alert alert-warning">No stock data available.</div>
+    <% end %>
 
-<h1>Top 10 Stocks</h1>
-
-<% if @top_symbols.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Symbol</th>
-        <th>Company Name</th>
-        <th>Primary Exchange</th>
-        <th>Open</th>
-        <th>Close</th>
-        <th>Latest Volume</th>
-        <th>Market Cap</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @top_symbols.each do |stock| %>
-        <tr>
-          <td><%= stock[:symbol] %></td>
-          <td><%= stock[:company_name] %></td>
-          <td><%= stock[:primary_exchange] %></td>
-          <td><%= number_to_currency(stock[:open]) %></td>
-          <td><%= number_to_currency(stock[:close]) %></td>
-          <td><%= number_with_delimiter(stock[:latest_volume]) %></td>
-          <td><%= number_to_currency(stock[:market_cap]) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No stock data available.</p>
-<% end %>
-
-<div>
+<div class="mt-4">
   <h2>Stock Market List</h2>
-  <% if @stock_market_list %>
-    <ul>
-      <% @stock_market_list.each do |data| %>
-        <li>
-          <%= "#{data[:symbol]}: Company Name: #{data[:company_name]}, 
-          Primary Exchange: #{data[:primary_exchange]}, 
-          Latest Price: #{data[:latest_price]}, 
-          Change Percent: #{data[:change_percent]}, 
-          Market Cap: #{data[:market_cap]}" %>
-        </li>
-      <% end %>
-    </ul>
+  <% if @stock_market_list.present? %>
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Symbol</th>
+          <th>Company Name</th>
+          <th>Primary Exchange</th>
+          <th>Latest Price</th>
+          <th>Change Percent</th>
+          <th>Market Cap</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @stock_market_list.each do |data| %>
+          <tr>
+            <td><%= data[:symbol] %></td>
+            <td><%= data[:company_name] %></td>
+            <td><%= data[:primary_exchange] %></td>
+            <td><%= number_to_currency(data[:latest_price]) %></td>
+            <td><%= data[:change_percent] %></td>
+            <td><%= number_to_human(data[:market_cap]) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   <% else %>
-    <p>No stock market data available.</p>
+    <div class="alert alert-warning">No stock market data available.</div>
   <% end %>
 </div>

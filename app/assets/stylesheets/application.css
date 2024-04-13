@@ -27,7 +27,13 @@ tr {
   border-collapse: collapse;
 }
 td {
-  /* background-color: yellow; */
   border: 1px solid black;
   padding: 5px;
+}
+
+.logo-inline {
+  height: 100px;
+  width: auto; 
+  vertical-align: middle;
+  margin-right: 10px;
 }

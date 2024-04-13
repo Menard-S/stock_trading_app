@@ -1,44 +1,60 @@
-<h2>Sign up</h2>
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="container mt-4">
+        <div class="row">
+          <div class="col-md-6">
+            <%= image_tag 'side board.png', alt: 'Equisphere', class: 'img-fluid' %>
+          </div>    
+    
+          <div class="col-md-6">
+            <h2>Sign up</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+            <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+              <%= render "devise/shared/error_messages", resource: resource %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+              <div class="mb-3">
+                <%= f.label :email, class: 'form-label' %><br />
+                <%= f.email_field :email, autofocus: true, autocomplete: "email", class: 'form-control' %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.label :name, class: 'form-label' %><br />
+                <%= f.text_field :name, autofocus: true, autocomplete: "name", class: 'form-control' %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.label :yob, "Year of Birth", class: 'form-label' %><br />
+                <%= f.number_field :yob, autofocus: true, autocomplete: "yob", class: 'form-control' %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.label :asset, "Initial Funds", class: 'form-label' %><br />
+                <%= f.number_field :asset, autofocus: true, autocomplete: "asset", class: 'form-control' %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.label :password, class: 'form-label' %>
+                <% if @minimum_password_length %>
+                <em>(<%= @minimum_password_length %> characters minimum)</em>
+                <% end %><br />
+                <%= f.password_field :password, autocomplete: "new-password", class: 'form-control' %>
+              </div>
+
+              <div class="mb-3">
+                <%= f.label :password_confirmation, class: 'form-label' %><br />
+                <%= f.password_field :password_confirmation, autocomplete: "new-password", class: 'form-control' %>
+              </div>
+
+              <div class="actions">
+                <%= f.submit "Sign up", class: 'btn btn-primary' %>
+              </div>
+            <% end %>
+
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :yob, "Year of Birth" %><br />
-    <%= f.number_field :yob, autofocus: true, autocomplete: "yob" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :asset, "Initial Funds" %><br />
-    <%= f.number_field :asset, autofocus: true, autocomplete: "asset" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+</div>
