@@ -7,7 +7,7 @@ class Trader::PortfolioController < Trader::BaseController
   def fetch_stock
     symbol = params[:symbol]
     @stock = IexService.fetch_quote(symbol)
-    render partial: 'stock_details', locals: { stock: @stock }
+    render 'stock_page'
   end
 
   def process_order

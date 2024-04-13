@@ -8,7 +8,7 @@ en:
       send_paranoid_instructions: "If your email address exists in our database, you will receive an email with instructions for how to confirm your email address in a few minutes."
     failure:
       already_authenticated: "You are already signed in."
-      not_approved: 'Your registration is currently pending. You will be able to trade once an admin approves your account.'
+      not_approved: 'Your registration is currently pending. You will be able to trade once an admin approves your account. For now, see the list of our supported stocks below.'
       inactive: "Your account is not activated yet."
       invalid: "Invalid %{authentication_keys} or password."
       locked: "Your account is locked."

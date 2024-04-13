@@ -1,31 +1,33 @@
 <h2>Transaction History</h2>
-<p><%= link_to 'Back to portfolio trading',  trader_portfolio_path, method: :get %></p>
+<p><%= link_to 'Back to home', root_path, class: 'btn btn-primary', role: 'button' %></p>
 
-<table>
-  <thead>
-    <tr>
-      <th>Date and Time</th>
-      <th>Balance before Transaction</th>
-      <th>Type</th>
-      <th>Stock</th>
-      <th>Shares</th>
-      <th>Transaction Price</th>
-      <th>Current Balance</th> 
-    </tr>
-  </thead>
-<tbody>
-  <% @transactions.each do |transaction| %>
-    <tr>
-      <td><%= transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') %></td>
-      <td><%= number_to_currency(@transaction_balances[transaction.id][:before]) %></td>
-      <td><%= transaction.transaction_type.capitalize %></td>
-      <td>
-        <%= link_to transaction.stock.symbol, trader_fetch_stock_path(symbol: transaction.stock.symbol), remote: true %>
-      </td>
-      <td><%= transaction.share %></td>
-      <td><%= number_to_currency(transaction.transaction_price) %></td>
-      <td><%= number_to_currency(@transaction_balances[transaction.id][:after]) %></td>
-    </tr>
-  <% end %>
-</tbody>
-</table>
+<div class="table-responsive">
+  <table class="table table-striped table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Date and Time</th>
+        <th>Balance before Transaction</th>
+        <th>Type</th>
+        <th>Stock</th>
+        <th>Shares</th>
+        <th>Transaction Price</th>
+        <th>Current Balance</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.timestamp.strftime('%Y-%m-%d %H:%M:%S') %></td>
+          <td><%= number_to_currency(@transaction_balances[transaction.id][:before]) %></td>
+          <td><%= transaction.transaction_type.capitalize %></td>
+          <td>
+            <%= link_to transaction.stock.symbol, trader_fetch_stock_path(symbol: transaction.stock.symbol), remote: true %>
+          </td>
+          <td><%= transaction.share %></td>
+          <td><%= number_to_currency(transaction.transaction_price) %></td>
+          <td><%= number_to_currency(@transaction_balances[transaction.id][:after]) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

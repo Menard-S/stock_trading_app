@@ -1,29 +1,39 @@
-  <h2>User: <%= @user.name %></h2>
-  <h3>Adjusted Asset Balance: <%= number_to_currency(@asset_balance) %></h3>
+<div class="trader-dashboard container">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <h2 class="mb-3"><%= @user.name %>, your buying power is <%= number_to_currency(@asset_balance) %></h2>
+      <h3 class="mb-3">Place your buy or sell order by entering the number of stocks below</h3>
 
-<% if stock.present? %>
-  <div>
-    <h3><%= stock[:symbol] %> - <%= stock[:company_name] %></h3>
-    <% if stock[:logo_url].present? %>
-      <img src="<%= stock[:logo_url] %>" alt="<%= stock[:company_name] %> logo" />
-    <% end %>
-    <p>Latest Price*: <%= number_to_currency(stock[:latest_price]) %></p>
-    <small>* 15 minute delayed price</small>
+      <% if stock.present? %>
+        <div class="card mb-4 shadow-sm">
+          <div class="card-body bg-light">
+            <h3 class="card-title text-primary"><%= stock[:symbol] %> - <%= stock[:company_name] %></h3>
+            <% if stock[:logo_url].present? %>
+              <img src="<%= stock[:logo_url] %>" alt="<%= stock[:company_name] %> logo" class="img-fluid mb-3" />
+            <% end %>
+            <p class="card-text font-weight-bold"><strong>Latest Price*: <%= number_to_currency(stock[:latest_price]) %></p>
+            <small class="text-muted">* 15 minute delayed price</small>
 
-    <% stock_record = Stock.find_by(symbol: stock[:symbol]) %>
-    <% user_stock_portfolio = @user.portfolios.find_by(stock_id: stock_record&.id) %>
-    <p>Shares Owned: <%= user_stock_portfolio&.share || 0 %></p>
+            <% stock_record = Stock.find_by(symbol: stock[:symbol]) %>
+            <% user_stock_portfolio = @user.portfolios.find_by(stock_id: stock_record&.id) %>
+            <p class="mt-3"><strong>Shares Owned: <%= user_stock_portfolio&.share || 0 %></p>
 
-    <%= form_with url: trader_portfolio_path, method: :post, local: true do |f| %>
-      <%= f.hidden_field :symbol, value: stock[:symbol] %>
-      <%= f.label :quantity, 'Number of shares' %>
-      <%= f.number_field :quantity, min: 1 %>
-      <%= f.submit "Buy", name: 'commit', value: 'Buy' %>
-      <%= f.submit "Sell", name: 'commit', value: 'Sell' %>
-    <% end %>
+            <%= form_with url: trader_portfolio_path, method: :post, local: true, class: 'mt-4' do |f| %>
+              <%= f.hidden_field :symbol, value: stock[:symbol] %>
+              <div class="form-group">
+                <%= f.label :quantity, 'Number of shares', class: 'form-label' %>
+                <%= f.number_field :quantity, min: 1, class: 'form-control' %>
+              </div>
+              <%= f.submit "Buy", name: 'commit', value: 'Buy', class: 'btn btn-primary mt-2' %>
+              <%= f.submit "Sell", name: 'commit', value: 'Sell', class: 'btn btn-danger mt-2' %>
+            <% end %>
+          </div>
+        </div>
+      <% else %>
+        <p class="alert alert-warning">Stock is disabled or invalid. Please go back to your portfolio to select a valid stock.</p>
+      <% end %>
+
+      <p class="mt-4"><%= link_to 'Back to my portfolio', trader_portfolio_path, class: 'btn btn-link' %></p>
+    </div>
   </div>
-<% else %>
-  <p>Stock is disabled or invalid. Go back to your portfolio to select a valid stock.</p>
-<% end %>
-
-  <p><%= link_to 'Back to my portfolio', trader_portfolio_path, method: :get %></p>
+</div>
