@@ -10,8 +10,9 @@ Rails.application.routes.draw do
   root 'home#index'
 
   namespace :admin do
-    resources :traders, only: [:new, :create] # Define routes for new and create actions
-    resources :users do 
+    resources :transactions, only: [:index]
+    # resources :traders, only: [:new, :create]
+    resources :users, only: [:index, :show, :edit, :update, :new, :create] do 
       get 'transactions'
       member do
         patch 'activate', to: 'users#activate_user'

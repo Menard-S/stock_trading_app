@@ -21,8 +21,8 @@ class UserMailer < ApplicationMailer
   # end
   def invitation_email(user)
     @user = user
-    mail(to: @user.email, subject: 'You are invited to join our platform')
+    @url = edit_user_password_url(@user, reset_password_token: @user.reset_password_token)
+    mail(to: @user.email, subject: 'Invitation to Stock Trading App')
   end
-  
 end
   

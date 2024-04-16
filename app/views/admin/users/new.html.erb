@@ -1,55 +1,24 @@
-<!-- app/views/admin/traders/new.html.erb -->
-<h1>New Trader</h1>
+<!-- app/views/admin/users/new.html.erb -->
 
-<%= form_for [:admin, @trader] do |f| %>
- <% if @trader.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@trader.errors.count, "error") %> prohibited this object from being saved:</h2>
-      <ul>
-        <% @trader.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<h1>Create New Trader</h1>
 
+<%= form_with(model: @trader, url: admin_users_path, method: :post) do |form| %>
   <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    <%= form.label :email %><br />
+    <%= form.text_field :email %>
   </div>
 
   <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
+    <%= form.label :name %><br />
+    <%= form.text_field :name %>
   </div>
 
   <div class="field">
-    <%= f.label :yob, "Year of Birth" %><br />
-    <%= f.number_field :yob, autofocus: true, autocomplete: "yob" %>
+    <%= form.label :yob, "Year of Birth" %><br />
+    <%= form.number_field :yob %>
   </div>
-
+  <br />
   <div class="field">
-    <%= f.label :asset, "Initial Funds" %><br />
-    <%= f.number_field :asset, autofocus: true, autocomplete: "asset" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password %>
-    <% if @minimum_password_length %>
-    <em>(<%= @minimum_password_length %> characters minimum)</em>
-    <% end %><br />
-    <%= f.password_field :password, autocomplete: "new-password" %>
-  </div>
-
-  <div class="field">
-    <%= f.label :password_confirmation %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Create Trader" %>
+    <%= form.submit "Create Trader" %>
   </div>
 <% end %>
-
-
-    <p><%= link_to 'Go to admin dashboard', admin_dashboard_path, method: :get %></p>

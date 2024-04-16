@@ -1,20 +1,21 @@
-<h1>Transactions</h1>
+<!-- app/views/admin/transactions/index.html.erb -->
+<h1>All Transactions</h1>
 
 <table>
   <thead>
     <tr>
-      <th>User</th>
+      <th>Trader</th>
+      <th>Transaction_type</th>
       <th>Amount</th>
-      <th>Type</th>
       <th>Date</th>
     </tr>
   </thead>
   <tbody>
     <% @transactions.each do |transaction| %>
       <tr>
-        <td><%= transaction.user.email %></td>
-        <td><%= transaction.transaction_price %></td>
+        <td><%= transaction.user.name %></td>
         <td><%= transaction.transaction_type %></td>
+        <td><%= transaction.transaction_price %></td>
         <td><%= transaction.created_at %></td>
       </tr>
     <% end %>

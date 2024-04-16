@@ -16,7 +16,8 @@ class User < ApplicationRecord
   validate :at_least_18
 
   before_create :generate_invitation_token, if: -> { invited_by_admin }
-
+  before_validation :set_default_asset, on: :create
+  
   after_initialize :set_default_role_and_status, if: :new_record?
   after_create :send_admin_mail, :send_pending_approval_email
 
@@ -63,4 +64,7 @@ class User < ApplicationRecord
    UserMailer.pending_approval(self).deliver_now
   end
   
+  def set_default_asset
+    self.asset ||= 0
+  end
 end

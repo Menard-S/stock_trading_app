@@ -28,7 +28,7 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.email %></td>
-        <td><%= link_to 'Edit', edit_admin_user_path(user) %> |  <%= link_to 'Transactions', admin_user_transactions_path(user) %></td>
+        <td><%= link_to 'Edit', edit_admin_user_path(user) %> | <%= link_to 'Show details', admin_user_path(user) %> </td>
       </tr>
     <% end %>
   </table>
@@ -36,4 +36,5 @@
   <p>No approved users.</p>
 <% end %>
 
+<%= link_to 'View all transactions', admin_transactions_path %>
 <%= link_to 'Back to home', root_path %>
