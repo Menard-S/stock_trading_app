@@ -11,9 +11,10 @@ class UserMailer < ApplicationMailer
     mail(to: @user.email, subject: 'Your account has been activated')
   end
 
-  def verification_link(user)
+  def user_invitation(user, invitation_link)
     @user = user
-    mail(to: @user.email, subject: "Verify your account")
+    @invitation_link = invitation_link
+    mail(to: @user.email, subject: 'Invitation to join EquiSphere')
   end
 end
   

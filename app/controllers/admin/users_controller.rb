@@ -1,5 +1,5 @@
 class Admin::UsersController < Admin::BaseController
-  before_action 
+
   def activate_user
     user = User.find(params[:id])
     if user.update(status: :approved)
@@ -20,14 +20,24 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def create
-    @trader = User.new(trader_params)
-    if @trader.save
-      UserMailer.verification_link(@trader).deliver_now
-      redirect_to admin_dashboard_path, notice: 'Trader was successfully created.'
+    new_user_params = params.require(:user).permit(:email, :name)
+    if params[:commit] == "Invite Trader"
+      new_user_params[:yob] = 1900 # Placeholder year 
+      new_user_params[:asset] = 0 # Placeholder year 
+    end
+  
+    @invited_user = User.invite!(new_user_params) do |invitee|
+    invitee.skip_invitation = true 
+    end
+  
+    if @invited_user.errors.empty?
+      UserMailer.user_invitation(@invited_user, invitation_link_url(@invited_user)).deliver_now
+      redirect_to admin_dashboard_path, notice: 'Trader was successfully invited.'
     else
       render :new
     end
-  end
+  end  
+  
 
   def edit
     @user = User.find(params[:id])
@@ -58,9 +68,11 @@ class Admin::UsersController < Admin::BaseController
     params.require(:user).permit(:email, :name, :yob)
   end
 
-  private
-
   def trader_params
     params.require(:trader).permit(:email, :name, :yob, :asset, :password, :password_confirmation)
+  end
+  
+  def invitation_link_url(user)
+    accept_invitation_url(token: user.invitation_token)
   end
 end
