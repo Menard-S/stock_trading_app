@@ -22,11 +22,9 @@ class StockPurchaseService < BaseService
       
       #Updates share attribute for portfolios table with the number of shares
       #Updates closing price attribute for portfolios table with the price fetched from IEX
-      #Calls update_gains from Portfolio model
       #Saves the portfolio
       portfolio.share = (portfolio.share || 0) + quantity
       portfolio.closing_price = price
-      portfolio.update_gains
       portfolio.save!
 
       #Saves the user

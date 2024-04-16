@@ -1,40 +1,51 @@
-  <h2>User: <%= @user.name %></h2>
-  <h3>Adjusted Asset Balance: <%= number_to_currency(@asset_balance) %></h3>
+<div class="container mt-4">
+  <h2>Hello <%= @user.name %>!</h2>
+  <h3>You have a buying power of <%= number_to_currency(@asset_balance) %></h3>
 
-  <p><%= link_to 'Back to homepage', root_path, method: :get %></p>
+  <p><%= link_to 'Back to homepage', root_path, class: 'btn btn-primary' %></p>
 
-<%= form_with url: trader_fetch_stock_path, method: :get, remote: true, id: 'stock_select_form' do |f| %>
-  <%= f.label :symbol, 'Select a Stock' %>
-  <%= f.select :symbol, @active_stocks.map { |s| [s[:symbol], s[:symbol]] }, { include_blank: true }, onchange: 'this.form.submit();' %>
-<% end %>
+  <%= form_with url: trader_fetch_stock_path, method: :get, remote: true, id: 'stock_select_form', class: 'mb-3' do |f| %>
+    <div class="row">
+      <div class="col-md-6">
+        <%= f.label :symbol, 'Select a Stock', class: 'form-label fw-bold fs-6', style: "color: #0056b3;" %>
+        <%= f.select :symbol, @active_stocks.map { |s| [s[:symbol], s[:symbol]] }, { include_blank: true }, onchange: 'this.form.submit();', class: 'form-select' %>
+      </div>
+    </div>
+  <% end %>
 
-<div id="stock_details"></div>
+  <div id="stock_details"></div>
 
-<script>
-  document.addEventListener("ajax:success", (event) => {
-    const [data, status, xhr] = event.detail;
-    document.getElementById('stock_details').innerHTML = xhr.responseText;
-  });
-</script>
+      <script>
+        document.addEventListener("ajax:success", (event) => {
+          const [data, status, xhr] = event.detail;
+          document.getElementById('stock_details').innerHTML = xhr.responseText;
+        });
+      </script>
 
-<p><%= link_to 'Transaction history',  trader_transactions_path, method: :get %></p>
+  <p><%= link_to 'Transaction history', trader_transactions_path, class: 'btn btn-secondary' %></p>
 
-<% @user_portfolio.each do |portfolio_item| %>
-  <div>
-    <p>
-      <%= link_to portfolio_item.stock.symbol, trader_fetch_stock_path(symbol: portfolio_item.stock.symbol), remote: true %>
-    </p>
-    <p>Shares: <%= portfolio_item.share %></p>
-    <p>Current Price: <%= number_to_currency(portfolio_item.stock.current_price) %></p>
-    <p>Gains: <%= number_to_currency(portfolio_item.gains) %></p>
-
-    <% last_transaction = portfolio_item.stock.transactions.order(timestamp: :desc).first %>
-    <% if last_transaction.present? %>
-      <p>Transaction Price: <%= number_to_currency(last_transaction.transaction_price) %></p>
-      <p>Transaction Type: <%= last_transaction.transaction_type.capitalize %></p>
-      <p>Market Value: <%= number_to_currency(portfolio_item.share * last_transaction.transaction_price) %></p>
-    <% else %>
-      <p>No transactions found.</p>
+  <div class="row">
+    <% @user_portfolio.each_with_index do |portfolio_item, index| %>
+      <div class="col-md-4 mb-4">
+        <div class="card" style="background-color: <%= portfolio_item.gains >= 0 ? '#d4edda' : '#f8d7da'; %>;">
+          <div class="card-header" style="font-weight: bold; font-size: 18px;">
+            <%= link_to portfolio_item.stock.symbol, trader_fetch_stock_path(symbol: portfolio_item.stock.symbol), remote: true, style: "font-weight: bold; font-size: 18px;" %>
+          </div>
+          <div class="card-body">
+            <p><strong>Shares:</strong> <%= portfolio_item.share %></p>
+            <p><strong>Current Price:</strong> <%= number_to_currency(portfolio_item.stock.current_price) %></p>
+            <p><strong>Gains:</strong> <%= number_to_currency(portfolio_item.gains) %></p>
+            <% last_transaction = portfolio_item.stock.transactions.order(timestamp: :desc).first %>
+            <% if last_transaction.present? %>
+              <p><strong>Transaction Price:</strong> <%= number_to_currency(last_transaction.transaction_price) %></p>
+              <p><strong>Transaction Type:</strong> <%= last_transaction.transaction_type.capitalize %></p>
+              <p><strong>Market Value:</strong> <%= number_to_currency(portfolio_item.share * portfolio_item.closing_price) %></p>
+            <% else %>
+              <p>No transactions found.</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
     <% end %>
   </div>
-<% end %>
+</div>

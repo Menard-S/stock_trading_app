@@ -1,6 +1,7 @@
 class Portfolio < ApplicationRecord
   belongs_to :user
   belongs_to :stock
+  before_validation :set_default_values
 
   validates :share, numericality: { greater_than_or_equal_to: 0 }
 
@@ -27,5 +28,11 @@ class Portfolio < ApplicationRecord
       end
     end
     Rails.logger.info "Completed update of all portfolio gains"
+  end
+
+  private
+  def set_default_values
+    self.gains ||= 0.0
+    self.share ||= 0
   end
 end
