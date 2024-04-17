@@ -5,7 +5,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :trackable
+         :trackable, :invitable
 
   enum role: { trader: 0, admin: 1 }
   enum status: { pending: 0, approved: 1, rejected: 2 }

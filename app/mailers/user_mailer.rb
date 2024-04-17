@@ -1,13 +1,9 @@
 class UserMailer < ApplicationMailer
   default from: 'menard.segeunza@gmail.com'
 
-  def pending_approval(user, invited_by_admin)
-    if invited_by_admin
-      invitation_email
-    else
+  def pending_approval(user)
       @user = user
       mail(to: @user.email, subject: 'Account pending admin approval')
-    end
   end
 
   def account_activation(user)

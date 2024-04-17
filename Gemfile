@@ -46,6 +46,8 @@ gem "bootsnap", require: false
 
 gem 'devise'
 
+gem 'devise_invitable'
+
 gem 'iex-ruby-client'
 
 gem 'httparty'
