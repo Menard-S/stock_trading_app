@@ -11,6 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[7.1].define(version: 2024_04_16_112939) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,9 +58,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_112939) do
     t.datetime "updated_at", null: false
     t.integer "role", default: 0, null: false
     t.integer "status", default: 0, null: false
-    t.string "name", null: false
-    t.integer "yob", null: false
-    t.decimal "asset", precision: 10, scale: 2, null: false
+    t.string "name", default: "Unknown", null: false
+    t.integer "yob"
+    t.decimal "asset", precision: 10, scale: 2, default: "0.0", null: false
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
