@@ -1,5 +1,14 @@
 class Admin::UsersController < Admin::BaseController
-  before_action :set_user, only: [:edit, :update, :show, :activate_user, :deactivate_user,]
+
+  def activate_user
+    user = User.find(params[:id])
+    if user.update(status: :approved)
+      UserMailer.account_activation(user).deliver_now
+      redirect_to admin_dashboard_path, notice: "User activated successfully and notification sent."
+    else
+      redirect_to admin_dashboard_path, alert: "There was a problem activating the user."
+    end
+  end
 
   def index
     @trader = User.all
@@ -11,16 +20,25 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def create
-    @trader = User.new(trader_params.merge(invited_by_admin: true))
-    @trader.password = Devise.friendly_token.first(8) # Generate a random password
-    
-    if @trader.save
-      UserMailer.invitation_email(@trader).deliver_now
-      redirect_to admin_dashboard_path, notice: 'Trader was successfully created.'
+    new_user_params = params.require(:user).permit(:email, :name)
+    if params[:commit] == "Invite Trader"
+      new_user_params[:yob] = 1900 # Placeholder year 
+      new_user_params[:asset] = 0 # Placeholder year 
+    end
+  
+    @invited_user = User.invite!(new_user_params) do |invitee|
+    invitee.skip_invitation = true 
+    end
+  
+    if @invited_user.errors.empty?
+      UserMailer.user_invitation(@invited_user, invitation_link_url(@invited_user)).deliver_now
+      redirect_to admin_dashboard_path, notice: 'Trader was successfully invited.'
+
     else
       render :new
     end
-  end
+  end  
+  
 
   def edit
     # @user = User.find(params[:id])
@@ -82,5 +100,9 @@ class Admin::UsersController < Admin::BaseController
 
   def trader_params
     params.require(:user).permit(:email, :name, :yob)
+  end
+  
+  def invitation_link_url(user)
+    accept_invitation_url(token: user.invitation_token)
   end
 end

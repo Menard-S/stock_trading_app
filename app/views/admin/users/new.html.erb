@@ -1,6 +1,16 @@
-<!-- app/views/admin/users/new.html.erb -->
+<h1>New Trader</h1>
 
-<h1>Create New Trader</h1>
+<%= form_for [:admin, @trader], url:  admin_users_path do |f| %>
+ <% if @trader.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@trader.errors.count, "error") %> prohibited this object from being saved:</h2>
+      <ul>
+        <% @trader.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
 <%= form_with(model: @trader, url: admin_users_path, method: :post) do |form| %>
   <div class="field">
@@ -13,12 +23,8 @@
     <%= form.text_field :name %>
   </div>
 
-  <div class="field">
-    <%= form.label :yob, "Year of Birth" %><br />
-    <%= form.number_field :yob %>
-  </div>
-  <br />
-  <div class="field">
-    <%= form.submit "Create Trader" %>
+  <div class="actions">
+    <%= f.submit "Invite Trader" %>
+
   </div>
 <% end %>

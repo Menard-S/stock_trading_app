@@ -10,15 +10,12 @@ class UserMailer < ApplicationMailer
     @user = user
     mail(to: @user.email, subject: 'Your account has been activated')
   end
-
-  # def invitation_link(user)
-  #   @user = user
-  #   mail(to: @user.email, subject: "Invitation to join our trading platform")
-  # end
-  def invitation_email(user)
+  
+  def user_invitation(user, invitation_link)
     @user = user
-    @url = edit_user_password_url(@user, reset_password_token: @user.reset_password_token)
-    mail(to: @user.email, subject: 'Invitation to Stock Trading App')
+    @invitation_link = invitation_link
+    mail(to: @user.email, subject: 'Invitation to join EquiSphere')
+
   end
 end
   

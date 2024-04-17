@@ -6,13 +6,15 @@ Rails.application.routes.draw do
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Defines the root path route ("/")
+  get '/accept_invitation', to: 'invitations#edit', as: 'accept_invitation'
+  post '/accept_invitation', to: 'invitations#update', as: 'register_invitation'
+  
   root 'home#index'
 
   namespace :admin do
     resources :transactions, only: [:index]
-    # resources :traders, only: [:new, :create]
-    resources :users, only: [:index, :show, :edit, :update, :new, :create] do 
+    resources :users, only: [:index, :show, :edit, :update, :new, :create] do
+
       get 'transactions'
       member do
         patch 'activate', to: 'users#activate_user'

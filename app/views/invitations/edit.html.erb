@@ -1,0 +1,40 @@
+<div class="container vh-100 d-flex align-items-center justify-content-center">
+  <div class="row">
+    <div class="col-md-6">      
+      <h1>EquiSphere invites you to be one of our traders!</h1>
+      <% if @user %>
+      <%= form_with model: @user, url: register_invitation_path, method: :post, local: true, class: "needs-validation", novalidate: true do |form| %>
+        <div class="mb-3">
+          <p>Please set your password:</p>
+          <%= form.label :password, 'Password', class: 'form-label' %>
+          <%= form.password_field :password, class: 'form-control', required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= form.label :password_confirmation, 'Confirm Password', class: 'form-label' %>
+          <%= form.password_field :password_confirmation, class: 'form-control', required: true %>
+        </div>
+
+        <div class="mb-3">
+          <p>Set your year of birth:</p>
+          <%= form.label :yob, 'Year of Birth', class: 'form-label' %>
+          <%= form.number_field :yob, in: 1900..Time.now.year, step: 1, class: 'form-control', required: true %>
+        </div>
+
+        <div class="mb-3">
+          <p>Enter your initial funds:</p>
+          <%= form.label :asset, 'Initial Funds', class: 'form-label' %>
+          <%= form.number_field :asset, step: 0.01, class: 'form-control', required: true %>
+        </div>
+
+        <%= form.hidden_field :invitation_token, value: @user.invitation_token %>
+        <%= form.submit "Complete Registration", class: "btn btn-primary" %>
+      <% end %>
+      <% else %>
+      <div class="alert alert-warning" role="alert">
+        <p>The invitation token is invalid or has expired.</p>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

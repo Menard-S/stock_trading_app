@@ -3,7 +3,7 @@ class User < ApplicationRecord
   has_many :transactions
   has_many :portfolios
 
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :trackable, :invitable
 
@@ -19,7 +19,16 @@ class User < ApplicationRecord
   before_validation :set_default_asset, on: :create
   
   after_initialize :set_default_role_and_status, if: :new_record?
-  after_create :send_admin_mail, :send_pending_approval_email
+  # after_create :send_admin_mail, :send_pending_approval_email
+  after_create_commit do
+    if invitation_token.present?  # Check if this was an invited user
+        @invited_user = self
+        AdminMailer.new_user_invitation_notice(@invited_user).deliver_now
+    else  # Regular user creation scenario
+        send_admin_mail
+        send_pending_approval_email
+    end
+  end 
 
   def active_for_authentication? 
     super && approved?
@@ -66,5 +75,9 @@ class User < ApplicationRecord
   
   def set_default_asset
     self.asset ||= 0
+  end
+
+  def invite_user
+    super if defined?(super) 
   end
 end
