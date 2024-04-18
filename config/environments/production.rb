@@ -94,5 +94,17 @@ Rails.application.configure do
   # ]
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              Rails.application.credentials.smtp_settings[:address],
+    port:                 Rails.application.credentials.smtp_settings[:port],
+    domain:               Rails.application.credentials.smtp_settings[:domain],
+    user_name:            Rails.application.credentials.smtp_settings[:user_name],
+    password:             Rails.application.credentials.smtp_settings[:password],
+    authentication:       Rails.application.credentials.smtp_settings[:authentication],
+    enable_starttls_auto: Rails.application.credentials.smtp_settings[:enable_starttls_auto]
+  }
+  
+  # Ensure you use your actual host for production, and use HTTPS if available
+  config.action_mailer.default_url_options = { host: 'equishare-92e6ffd5cea5.herokuapp.com', protocol: 'https' }
 end
