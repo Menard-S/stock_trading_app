@@ -6,6 +6,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :trackable
 
+  before_invitation_accepted :check_invitation_block
+
   enum role: { trader: 0, admin: 1 }
   enum status: { pending: 0, approved: 1, rejected: 2 }
 
@@ -35,6 +37,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def block_from_invitation?
+    false
+  end
 
   def at_least_18
     if yob.present? && Date.today.year - yob < 18

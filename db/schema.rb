@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_16_112939) do
+ActiveRecord::Schema[7.1].define(version: 2024_04_17_125601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -60,10 +60,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_112939) do
     t.string "name", null: false
     t.integer "yob", null: false
     t.decimal "asset", precision: 10, scale: 2, null: false
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
     t.integer "sign_in_count"
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
