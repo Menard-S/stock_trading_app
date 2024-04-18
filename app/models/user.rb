@@ -17,7 +17,7 @@ class User < ApplicationRecord
   validates :yob, presence: true, numericality: { only_integer: true }
   validate :at_least_18
 
-  before_create :generate_invitation_token, if: -> { invited_by_admin }
+  before_create :generate_invitation_token_if_invited_by_admin
   before_validation :set_default_asset, on: :create
   
   after_initialize :set_default_role_and_status, if: :new_record?
@@ -57,6 +57,18 @@ class User < ApplicationRecord
     end
   end
 
+  def generate_invitation_token_if_invited_by_admin
+    if invited_by_admin
+      self.invitation_token = Devise.friendly_token
+      self.invitation_created_at = Time.now.utc
+      self.invitation_sent_at = Time.now.utc
+    end
+  end
+
+  def set_default_asset
+    self.asset ||= 0
+  end
+
   def set_default_role_and_status
     self.role ||= :trader
     self.status ||= :pending
@@ -69,12 +81,8 @@ class User < ApplicationRecord
   def send_pending_approval_email
    UserMailer.pending_approval(self).deliver_now
   end
-  
-  def set_default_asset
-    self.asset ||= 0
-  end
 
-  def invite_user
-    super if defined?(super) 
-  end
+  # def invite_user
+  #   super if defined?(super) 
+  # end
 end
