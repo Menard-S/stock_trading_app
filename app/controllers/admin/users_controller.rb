@@ -21,15 +21,30 @@ class Admin::UsersController < Admin::BaseController
 
   def create
     new_user_params = params.require(:user).permit(:email, :name)
+
+    if new_user_params[:email].blank? || new_user_params[:name].blank?
+      flash[:alert] = 'Email and name cannot be empty.'
+      redirect_to admin_dashboard_path
+      return
+    end
+
+    existing_user = User.find_by(email: new_user_params[:email])
+    if existing_user
+      flash[:alert] = 'This user is already registered.'
+      redirect_to admin_dashboard_path
+      return
+    end
+
+
     if params[:commit] == "Invite Trader"
       new_user_params[:yob] = 1900 # Placeholder year 
       new_user_params[:asset] = 0 # Placeholder year 
     end
-  
+
     @invited_user = User.invite!(new_user_params) do |invitee|
     invitee.skip_invitation = true 
     end
-  
+
     if @invited_user.errors.empty?
       UserMailer.user_invitation(@invited_user, invitation_link_url(@invited_user)).deliver_now
       redirect_to admin_dashboard_path, notice: 'Trader was successfully invited.'
