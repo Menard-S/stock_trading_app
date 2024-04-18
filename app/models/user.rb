@@ -7,6 +7,8 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :trackable, :invitable
 
+  before_invitation_accepted :check_invitation_block
+
   enum role: { trader: 0, admin: 1 }
   enum status: { pending: 0, approved: 1, rejected: 2 }
 
@@ -45,13 +47,8 @@ class User < ApplicationRecord
 
   private
 
-  def generate_invitation_token
-    self.invitation_token = SecureRandom.hex(10)
-    self.invitation_sent_at = Time.current
-  end
-  
-  def send_invitation_email
-    UserMailer.invitation_email(self).deliver_now
+  def block_from_invitation?
+    false
   end
 
   def at_least_18
