@@ -1,38 +1,43 @@
-<h1>User Details</h1>
+<div class="container mt-3">
+  <h1>
+    <%= image_tag 'side board.png', alt: 'Equisphere Logo', class: 'logo-inline' %>
+    User Details
+  </h1>
 
-<dl>
-  <dt>Name:</dt>
-  <dd><%= @user.name %></dd>
+  <dl>
+    <dt>Name:</dt>
+    <dd><%= @user.name %></dd>
 
-  <dt>Email:</dt>
-  <dd><%= @user.email %></dd>
+    <dt>Email:</dt>
+    <dd><%= @user.email %></dd>
 
-  <dt>Asset:</dt>
-  <dd><%= @user.asset %></dd>
-</dl>
+    <dt>Asset:</dt>
+    <dd><%= @user.asset %></dd>
+  </dl>
 
-<h3>Transactions</h3>
-<% if @transactions.any? %>
-  <table>
-    <tr>
-      <th>Transaction Type</th>
-      <th>Stock Symbol</th>
-      <th>Quantity</th>
-      <th>Price</th>
-      <th>Total</th>
-    </tr>
-    <% @transactions.each do |transaction| %>
-      <tr>
-        <td><%= transaction.transaction_type %></td>
-        <td><%= transaction.stock.symbol %></td>
-        <td><%= transaction.share %></td>
-        <td><%= transaction.transaction_price %></td>
-        <td><%= transaction.stock.current_price %></td>
-      </tr>
-    <% end %>
-  </table>
-  <% else %>
-    <p>No transactions found for this user.</p>
-<% end %>
+  <h3>Transactions</h3>
+  <% if @transactions.any? %>
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Transaction Type</th>
+          <th>Stock Symbol</th>
+          <th>Quantity</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.transaction_type %></td>
+          <td><%= transaction.stock.symbol %></td>
+          <td><%= transaction.share %></td>
+          <td><%= transaction.transaction_price %></td>
+        </tr>
+      <% end %>
+    </table>
+    <% else %>
+      <p>No transactions found for this user.</p>
+  <% end %>
 
-<%= link_to 'Back', admin_users_path %>
+  <%= link_to 'Back', admin_dashboard_path %>
+</div>
