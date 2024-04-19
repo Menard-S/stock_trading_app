@@ -12,8 +12,7 @@ class User < ApplicationRecord
   enum role: { trader: 0, admin: 1 }
   enum status: { pending: 0, approved: 1, rejected: 2 }
 
-  validates :email, presence: true
-  validates :name, presence: true
+  validates :email, :name, :asset, presence: true
   validates :yob, presence: true, numericality: { only_integer: true }
   validate :at_least_18
 
@@ -21,7 +20,7 @@ class User < ApplicationRecord
   before_validation :set_default_asset, on: :create
   
   after_initialize :set_default_role_and_status, if: :new_record?
-  # after_create :send_admin_mail, :send_pending_approval_email
+
   after_create_commit do
     if invitation_token.present?  # Check if this was an invited user
         @invited_user = self

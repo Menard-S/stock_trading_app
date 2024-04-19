@@ -11,6 +11,12 @@ class InvitationsController < ApplicationController
   def update
     @user = User.find_by(invitation_token: params[:user][:invitation_token])
 
+    if params[:user][:password] != params[:user][:password_confirmation]
+      @user.errors.add(:password, "Passwords do not match")
+      render :edit
+      return
+    end
+
     if @user.update(user_params.merge(invitation_accepted_at: Time.current, status: :approved))
       sign_in(:user, @user) if @user.persisted?
       redirect_to root_path, notice: "Your registration has been approved, and your account is now active."

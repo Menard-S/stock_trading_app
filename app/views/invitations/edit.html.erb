@@ -8,17 +8,30 @@
           <p>Please set your password:</p>
           <%= form.label :password, 'Password', class: 'form-label' %>
           <%= form.password_field :password, class: 'form-control', required: true %>
+            <% if @user.errors.has_key?(:password) %>
+            <div class="invalid-feedback">
+              <%= @user.errors.full_messages_for(:password).join(', ') %>
         </div>
 
         <div class="mb-3">
           <%= form.label :password_confirmation, 'Confirm Password', class: 'form-label' %>
           <%= form.password_field :password_confirmation, class: 'form-control', required: true %>
+            <% if @user.errors.has_key?(:password_confirmation) %>
+              <div class="invalid-feedback">
+                <%= @user.errors.full_messages_for(:password_confirmation).join(', ') %>
+              </div>
+            <% end %>
         </div>
 
         <div class="mb-3">
           <p>Set your year of birth:</p>
           <%= form.label :yob, 'Year of Birth', class: 'form-label' %>
           <%= form.number_field :yob, in: 1900..Time.now.year, step: 1, class: 'form-control', required: true %>
+            <% if @user.errors.has_key?(:yob) %>
+              <div class="invalid-feedback">
+                <%= @user.errors.full_messages_for(:yob).join(', ') %>
+              </div>
+            <% end %>
         </div>
 
         <div class="mb-3">
