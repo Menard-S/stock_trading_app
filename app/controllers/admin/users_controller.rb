@@ -1,15 +1,5 @@
 class Admin::UsersController < Admin::BaseController
 
-  def activate_user
-    user = User.find(params[:id])
-    if user.update(status: :approved)
-      UserMailer.account_activation(user).deliver_now
-      redirect_to admin_dashboard_path, notice: "User activated successfully and notification sent."
-    else
-      redirect_to admin_dashboard_path, alert: "There was a problem activating the user."
-    end
-  end
-
   def index
     @trader = User.all
     @transactions = Transaction.all
@@ -56,11 +46,11 @@ class Admin::UsersController < Admin::BaseController
   
 
   def edit
-    # @user = User.find(params[:id])
+    @user = User.find(params[:id])
   end
 
   def update
-    # @user = User.find(params[:id])
+    @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to admin_dashboard_path, notice: "Trader was successfully updated."
     else
@@ -75,9 +65,9 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def activate_user
-    # user = User.find(params[:id])
-    if user.update(status: :approved)
-      UserMailer.account_activation(user).deliver_now
+    @user = User.find(params[:id])
+    if @user.update(status: :approved)
+      UserMailer.account_activation(@user).deliver_now
       redirect_to admin_dashboard_path, notice: "User activated successfully and notification sent."
     else
       redirect_to admin_dashboard_path, alert: "There was a problem activating the user."
@@ -92,15 +82,12 @@ class Admin::UsersController < Admin::BaseController
 
   def transactions
     @user = User.find_by(id: params[:id])
-    # puts "@user: #{@user.inspect}"
     if @user
       @transactions = @user.transactions
     else
       flash[:alert] = "User not found"
       redirect_to admin_users_path
     end
-    # @transactions = @user.transactions
-    # puts "@transactions: #{@transactions.inspect}"
   end
 
   private
