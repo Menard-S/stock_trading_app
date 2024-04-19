@@ -1,4 +1,5 @@
 class DeviseInvitableAddToUsers < ActiveRecord::Migration[7.1]
+  
   def up
     change_table :users do |t|
       t.string     :invitation_token unless column_exists?(:users, :invitation_token)
@@ -7,7 +8,7 @@ class DeviseInvitableAddToUsers < ActiveRecord::Migration[7.1]
       t.datetime   :invitation_accepted_at unless column_exists?(:users, :invitation_accepted_at)
       t.integer    :invitation_limit unless column_exists?(:users, :invitation_limit)
       unless column_exists?(:users, :invited_by_id) && column_exists?(:users, :invited_by_type)
-        t.references :invited_by, polymorphic: true
+      t.references :invited_by, polymorphic: true
       end
       t.integer    :invitations_count, default: 0 unless column_exists?(:users, :invitations_count)
       t.index      :invitation_token, unique: true unless index_exists?(:users, :invitation_token, unique: true)
