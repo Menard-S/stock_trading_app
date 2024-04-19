@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_16_153743) do
+
+ActiveRecord::Schema[7.1].define(version: 2024_04_17_125601) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -57,13 +58,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_153743) do
     t.datetime "updated_at", null: false
     t.integer "role", default: 0, null: false
     t.integer "status", default: 0, null: false
-    t.string "name", default: "Unknown", null: false
-    t.integer "yob"
-    t.decimal "asset", precision: 10, scale: 2, default: "0.0", null: false
-    t.string "confirmation_token"
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string "unconfirmed_email"
+    t.string "name", null: false
+    t.integer "yob", null: false
+    t.decimal "asset", precision: 10, scale: 2, null: false
     t.integer "sign_in_count"
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
@@ -78,6 +75,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_16_153743) do
     t.datetime "invitation_accepted_at"
     t.integer "invitation_limit"
     t.integer "invitations_count", default: 0
+    t.boolean "invited_by_admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
