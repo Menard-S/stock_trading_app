@@ -13,6 +13,7 @@ class InvitationsController < ApplicationController
 
     if params[:user][:password] != params[:user][:password_confirmation]
       @user.errors.add(:password, "Passwords do not match")
+        flash.now[:alert] = "Passwords do not match"
       render :edit
       return
     end

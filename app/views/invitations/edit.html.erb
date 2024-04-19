@@ -11,6 +11,8 @@
             <% if @user.errors.has_key?(:password) %>
             <div class="invalid-feedback">
               <%= @user.errors.full_messages_for(:password).join(', ') %>
+            </div>
+          <% end %>
         </div>
 
         <div class="mb-3">
