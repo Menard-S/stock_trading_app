@@ -30,7 +30,9 @@ td {
   border: 1px solid black;
   padding: 5px;
 }
-
+li {
+  text-decoration: none;
+}
 .logo-inline {
   height: 100px;
   width: auto; 
