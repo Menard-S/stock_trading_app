@@ -1,5 +1,7 @@
 class Admin::UsersController < Admin::BaseController
 
+  before_action :set_user, only: [:edit, :update, :show, :activate_user, :reject_user]
+
   def index
     @trader = User.all
     @transactions = Transaction.all
@@ -25,7 +27,6 @@ class Admin::UsersController < Admin::BaseController
       return
     end
 
-
     if params[:commit] == "Invite Trader"
       new_user_params[:yob] = 1900 # Placeholder year 
       new_user_params[:asset] = 0 # Placeholder year 
@@ -46,11 +47,10 @@ class Admin::UsersController < Admin::BaseController
   
 
   def edit
-    @user = User.find(params[:id])
+
   end
 
   def update
-    @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to admin_dashboard_path, notice: "Trader was successfully updated."
     else
@@ -59,13 +59,10 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def show
-    @user = User.find(params[:id])
     @transactions = @user.transactions
-
   end
 
   def activate_user
-    @user = User.find(params[:id])
     if @user.update(status: :approved)
       UserMailer.account_activation(@user).deliver_now
       redirect_to admin_dashboard_path, notice: "User activated successfully and notification sent."
@@ -74,11 +71,13 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
-  def deactivate_user
-    # @user = User.find(params[:id])
-    @user.deactivate! # Assuming you have a deactivate method in your User model
-    redirect_to admin_dashboard_path, notice: "User deactivated successfully."
-  end
+  def reject_user
+    if @user.destroy
+      redirect_to admin_dashboard_path, notice: "User was successfully rejected."
+    else
+      redirect_to admin_dashboard_path, alert: "There was a problem rejecting the user."
+    end
+  end  
 
   def transactions
     @user = User.find_by(id: params[:id])

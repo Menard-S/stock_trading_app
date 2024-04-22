@@ -18,7 +18,7 @@ Rails.application.routes.draw do
       get 'transactions'
       member do
         patch 'activate', to: 'users#activate_user'
-        patch 'deactivate', to: 'users#deactivate_user'
+        patch 'reject', to: 'users#reject_user'
       end
     end
     get 'dashboard', to: 'dashboard#index', as: :dashboard
