@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     resources :transactions, only: [:index]
-    resources :users, only: [:index, :show, :edit, :update, :new, :create] do
+    resources :users, only: [:show, :edit, :update, :new, :create] do
 
       get 'transactions'
       member do

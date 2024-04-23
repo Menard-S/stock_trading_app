@@ -2,13 +2,8 @@ class Admin::UsersController < Admin::BaseController
 
   before_action :set_user, only: [:edit, :update, :show, :activate_user, :reject_user]
 
-  def index
-    @trader = User.all
-    @transactions = Transaction.all
-  end
-
   def new
-    @trader = User.new
+    @add_new_trader = User.new
   end
 
   def create
@@ -28,8 +23,8 @@ class Admin::UsersController < Admin::BaseController
     end
 
     if params[:commit] == "Invite Trader"
-      new_user_params[:yob] = 1900 # Placeholder year 
-      new_user_params[:asset] = 0 # Placeholder year 
+      new_user_params[:yob] = 1900
+      new_user_params[:asset] = 0
     end
 
     @invited_user = User.invite!(new_user_params) do |invitee|

@@ -3,12 +3,12 @@
     <div class="col-md-6">
       <h1 class="mt-5 mb-4">New Trader</h1>
 
-      <%= form_for [:admin, @trader], url: admin_users_path, html: { class: "mb-4" } do |f| %>
-        <% if @trader.errors.any? %>
+      <%= form_for [:admin, @add_new_trader], url: admin_users_path, html: { class: "mb-4" } do |f| %>
+        <% if @add_new_trader.errors.any? %>
           <div id="error_explanation" class="alert alert-danger">
-            <h2><%= pluralize(@trader.errors.count, "error") %> prohibited this object from being saved:</h2>
+            <h2><%= pluralize(@add_new_trader.errors.count, "error") %> prohibited this object from being saved:</h2>
             <ul>
-              <% @trader.errors.full_messages.each do |message| %>
+              <% @add_new_trader.errors.full_messages.each do |message| %>
                 <li><%= message %></li>
               <% end %>
             </ul>
