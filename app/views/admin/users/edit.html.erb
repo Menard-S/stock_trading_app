@@ -1,25 +1,31 @@
-<!-- app/views/admin/dashboard/edit.html.erb -->
-<h2>Edit Trader</h2>
+<div class="container mt-3">
+  <h2>
+    <%= image_tag 'side board.png', alt: 'Equisphere Logo', class: 'logo-inline' %>
+    Edit Trader
+  </h2>
 
-<%= form_for [:admin, @user] do |f| %>
-  <%= render "devise/shared/error_messages", resource: @user %>
+  <%= form_for [:admin, @user] do |f| %>
+    <%= render "devise/shared/error_messages", resource: @user %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
-  </div>
+    <div class="field">
+      <%= f.label :email %><br />
+      <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :name %><br />
-    <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
-  </div>
+    <div class="field">
+      <%= f.label :name %><br />
+      <%= f.text_field :name, autofocus: true, autocomplete: "name" %>
+    </div>
 
-  <div class="field">
-    <%= f.label :yob, "Year of Birth" %><br />
-    <%= f.number_field :yob, autofocus: true, autocomplete: "yob" %>
-  </div>
-
-  <div class="actions">
-    <%= f.submit "Update User" %>
-  </div>
-<% end %>
+    <div class="field">
+      <%= f.label :yob, "Year of Birth" %><br />
+      <%= f.number_field :yob, autofocus: true, autocomplete: "yob" %>
+    </div>
+    <br />
+    <div class="actions">
+      <%= f.submit "Update User", class: "btn btn-success" %>
+    </div>
+  <% end %>
+  <br />
+  <%= link_to 'Back to admin dashboard', admin_dashboard_path, method: :get %>
+</div>

@@ -1,5 +1,4 @@
 class Admin::UsersController < Admin::BaseController
-
   before_action :set_user, only: [:edit, :update, :show, :activate_user, :reject_user]
 
   def new
@@ -28,7 +27,7 @@ class Admin::UsersController < Admin::BaseController
     end
 
     @invited_user = User.invite!(new_user_params) do |invitee|
-    invitee.skip_invitation = true 
+    invitee.skip_invitation = true
     end
 
     if @invited_user.errors.empty?
@@ -38,11 +37,9 @@ class Admin::UsersController < Admin::BaseController
     else
       render :new
     end
-  end  
-  
+  end   
 
   def edit
-
   end
 
   def update
@@ -72,17 +69,7 @@ class Admin::UsersController < Admin::BaseController
     else
       redirect_to admin_dashboard_path, alert: "There was a problem rejecting the user."
     end
-  end  
-
-  def transactions
-    @user = User.find_by(id: params[:id])
-    if @user
-      @transactions = @user.transactions
-    else
-      flash[:alert] = "User not found"
-      redirect_to admin_users_path
-    end
-  end
+  end 
 
   private
 
@@ -91,10 +78,6 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:email, :name, :yob)
-  end
-
-  def trader_params
     params.require(:user).permit(:email, :name, :yob)
   end
   

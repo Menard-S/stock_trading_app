@@ -1,40 +1,40 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-6">
-      <h1 class="mt-5 mb-4">New Trader</h1>
+<div class="container mt-3">
+  <h1 class="mt-5 mb-4">
+    <%= image_tag 'side board.png', alt: 'Equisphere Logo', class: 'logo-inline' %>
+    New Trader
+  </h1>
 
-      <%= form_for [:admin, @add_new_trader], url: admin_users_path, html: { class: "mb-4" } do |f| %>
-        <% if @add_new_trader.errors.any? %>
-          <div id="error_explanation" class="alert alert-danger">
-            <h2><%= pluralize(@add_new_trader.errors.count, "error") %> prohibited this object from being saved:</h2>
-            <ul>
-              <% @add_new_trader.errors.full_messages.each do |message| %>
-                <li><%= message %></li>
-              <% end %>
-            </ul>
-          </div>
-        <% end %>
+  <%= form_for [:admin, @add_new_trader], url: admin_users_path, html: { class: "mb-4" } do |f| %>
+    <% if @add_new_trader.errors.any? %>
+      <div id="error_explanation" class="alert alert-danger">
+        <h2><%= pluralize(@add_new_trader.errors.count, "error") %> prohibited this object from being saved:</h2>
+        <ul>
+          <% @add_new_trader.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-        <div class="form-group">
-          <%= f.label :email %><br>
-          <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
-        </div>
-
-        <div class="form-group">
-          <%= f.label :name %><br>
-          <%= f.text_field :name, autofocus: true, autocomplete: "name", class: "form-control" %>
-        </div>
-
-        <div class="actions">
-          <%= f.submit "Invite Trader", class: "btn btn-primary" %>
-        </div>
-      <% end %>
+    <div class="form-group">
+      <%= f.label :email %><br>
+      <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control" %>
     </div>
-  </div>
+
+    <div class="form-group">
+      <%= f.label :name %><br>
+      <%= f.text_field :name, autofocus: true, autocomplete: "name", class: "form-control" %>
+    </div>
+    <br />
+    <div class="actions">
+      <%= f.submit "Invite Trader", class: "btn btn-primary" %>
+    </div>
+  <% end %>
 
   <div class="row mt-4">
     <div class="col-md-6">
-      <p><%= link_to 'Go to admin dashboard', admin_dashboard_path, method: :get, class: "btn btn-secondary" %></p>
+      <p><%= link_to 'Go to admin dashboard', admin_dashboard_path, method: :get%></p>
     </div>
   </div>
+
 </div>
