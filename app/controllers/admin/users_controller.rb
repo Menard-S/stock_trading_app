@@ -22,8 +22,8 @@ class Admin::UsersController < Admin::BaseController
     end
 
     if params[:commit] == "Invite Trader"
-      new_user_params[:yob] = 1900 # Placeholder year 
-      new_user_params[:asset] = 0 # Placeholder year 
+      new_user_params[:yob] = 1900
+      new_user_params[:asset] = 0
     end
 
     @invited_user = User.invite!(new_user_params) do |invitee|
