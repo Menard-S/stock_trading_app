@@ -1,12 +1,8 @@
 class Admin::UsersController < Admin::BaseController
-
-  def index
-    @trader = User.all
-    @transactions = Transaction.all
-  end
+  before_action :set_user, only: [:edit, :update, :show, :activate_user, :reject_user]
 
   def new
-    @trader = User.new
+    @add_new_trader = User.new
   end
 
   def create
@@ -25,14 +21,13 @@ class Admin::UsersController < Admin::BaseController
       return
     end
 
-
     if params[:commit] == "Invite Trader"
       new_user_params[:yob] = 1900 # Placeholder year 
       new_user_params[:asset] = 0 # Placeholder year 
     end
 
     @invited_user = User.invite!(new_user_params) do |invitee|
-    invitee.skip_invitation = true 
+    invitee.skip_invitation = true
     end
 
     if @invited_user.errors.empty?
@@ -42,15 +37,12 @@ class Admin::UsersController < Admin::BaseController
     else
       render :new
     end
-  end  
-  
+  end   
 
   def edit
-    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
     if @user.update(user_params)
       redirect_to admin_dashboard_path, notice: "Trader was successfully updated."
     else
@@ -59,13 +51,10 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def show
-    @user = User.find(params[:id])
     @transactions = @user.transactions
-
   end
 
   def activate_user
-    @user = User.find(params[:id])
     if @user.update(status: :approved)
       UserMailer.account_activation(@user).deliver_now
       redirect_to admin_dashboard_path, notice: "User activated successfully and notification sent."
@@ -74,21 +63,13 @@ class Admin::UsersController < Admin::BaseController
     end
   end
 
-  def deactivate_user
-    # @user = User.find(params[:id])
-    @user.deactivate! # Assuming you have a deactivate method in your User model
-    redirect_to admin_dashboard_path, notice: "User deactivated successfully."
-  end
-
-  def transactions
-    @user = User.find_by(id: params[:id])
-    if @user
-      @transactions = @user.transactions
+  def reject_user
+    if @user.destroy
+      redirect_to admin_dashboard_path, notice: "User was successfully rejected."
     else
-      flash[:alert] = "User not found"
-      redirect_to admin_users_path
+      redirect_to admin_dashboard_path, alert: "There was a problem rejecting the user."
     end
-  end
+  end 
 
   private
 
@@ -97,10 +78,6 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def user_params
-    params.require(:user).permit(:email, :name, :yob)
-  end
-
-  def trader_params
     params.require(:user).permit(:email, :name, :yob)
   end
   

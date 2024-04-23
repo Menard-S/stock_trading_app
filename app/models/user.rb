@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable,
          :trackable, :invitable
 
-  before_invitation_accepted :check_invitation_block
+  # before_invitation_accepted :check_invitation_block
 
   enum role: { trader: 0, admin: 1 }
   enum status: { pending: 0, approved: 1, rejected: 2 }
@@ -38,11 +38,6 @@ class User < ApplicationRecord
   def inactive_message 
     approved? ? super : :not_approved
   end
-
-  def deactivate!
-    update(status: 'rejected')
-  end
-  
 
   private
 
@@ -81,7 +76,4 @@ class User < ApplicationRecord
    UserMailer.pending_approval(self).deliver_now
   end
 
-  # def invite_user
-  #   super if defined?(super) 
-  # end
 end

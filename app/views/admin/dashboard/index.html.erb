@@ -12,7 +12,7 @@
         <li>
           <%= user.email %> -
           <%= button_to 'Activate', activate_admin_user_path(user), method: :patch %>
-          <%= button_to 'Deactivate', deactivate_admin_user_path(user), method: :patch, data: { confirm: 'Are you sure?' } %>
+          <%= button_to 'Reject', reject_admin_user_path(user), method: :patch, data: { confirm: 'Are you sure?' } %>
         </li>
       <% end %>
     </ul>
