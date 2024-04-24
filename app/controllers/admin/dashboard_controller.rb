@@ -1,8 +1,8 @@
 class Admin::DashboardController < Admin::BaseController
   def index
     @user = User.all
-    @pending_users = User.where(status: :pending)
-    @approved_users = User.where(status: :approved)
+    @pending_users = User.where(status: :pending, role: 0)
+    @approved_users = User.where(status: :approved, role: 0)
   end
 
   def create

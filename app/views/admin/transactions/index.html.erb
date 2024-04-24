@@ -1,23 +1,32 @@
-<!-- app/views/admin/transactions/index.html.erb -->
-<h1>All Transactions</h1>
+<div class="container mt-3">
+  <h1>
+    <%= image_tag 'side board.png', alt: 'Equisphere Logo', class: 'logo-inline' %>
+    All Transactions
+  </h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Trader</th>
-      <th>Transaction_type</th>
-      <th>Amount</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @transactions.each do |transaction| %>
+  <table class="table table-hover">
+    <thead class="table-dark">
       <tr>
-        <td><%= transaction.user.name %></td>
-        <td><%= transaction.transaction_type %></td>
-        <td><%= transaction.transaction_price %></td>
-        <td><%= transaction.created_at %></td>
+        <th>Trader</th>
+        <th>Transaction_type</th>
+        <th>Amount</th>
+        <th>
+          Date & Time
+          (yyyy-mm-dd time zone)
+        </th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <td><%= transaction.user.name %></td>
+          <td><%= transaction.transaction_type %></td>
+          <td><%= transaction.transaction_price %></td>
+          <td><%= transaction.created_at %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+   <%= link_to 'Back to admin dashboard', admin_dashboard_path %>
+</div>
