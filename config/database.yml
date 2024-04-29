@@ -56,7 +56,7 @@ development:
 test:
   <<: *default
   database: stock_trading_app_test
-  username: msegfilph
+  username: postgres
   password: 12345
   host: 127.0.0.1
   port: 5432

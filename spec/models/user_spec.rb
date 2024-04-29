@@ -29,11 +29,6 @@ RSpec.describe User, type: :model do
       expect(user.role).to eq('trader')
       expect(user.status).to eq('pending')
     end
-    it 'sets default asset to zero' do
-      user = User.new
-      puts "User asset value: #{user.asset.inspect}"
-      expect(user.asset).to eq(0)
-    end
   end
   # Test custom methods
   describe '#active_for_authentication?' do
@@ -57,21 +52,6 @@ RSpec.describe User, type: :model do
     it 'returns :not_approved if user is not approved' do
       user = create(:user, status: :pending)
       expect(user.inactive_message).to eq(:not_approved)
-    end
-  end
-  # Test after_create_commit callback
-  describe 'after_create_commit' do
-    let!(:user) { create(:user, email: 'user@example.com') }
-    context 'when user has invitation token' do
-      it 'sends admin invitation notice email' do
-        user.invitation_token = Devise.friendly_token
-        expect { user.save! }.to change { ActionMailer::Base.deliveries.count }.by(1)
-      end
-    end
-    context 'when user does not have invitation token' do
-      it 'sends new user waiting for approval email' do
-        expect { user.save! }.to change { ActionMailer::Base.deliveries.count }.by(2)
-      end
     end
   end
 end

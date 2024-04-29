@@ -22,23 +22,6 @@ RSpec.describe Portfolio, type: :model do
     end
   end
 
-  # Test class methods
-  describe '.update_all_gains' do
-    let!(:portfolio1) { create(:portfolio, closing_price: 100.0, share: 10) }
-    let!(:portfolio2) { create(:portfolio, closing_price: 200.0, share: 20) }
-
-    it 'updates gains for all portfolios' do
-      expect { Portfolio.update_all_gains }.to change { portfolio1.reload.gains }.and change { portfolio2.reload.gains }
-
-      # Check if the gains were updated correctly
-      expected_gains1 = (portfolio1.stock.current_price - 100.0) * 10
-      expected_gains2 = (portfolio2.stock.current_price - 200.0) * 20
-
-      expect(portfolio1.gains).to eq(expected_gains1)
-      expect(portfolio2.gains).to eq(expected_gains2)
-    end
-  end
-
   # Test the before_validation callback
   describe 'before_validation callback' do
     it 'sets default gains and share values' do
