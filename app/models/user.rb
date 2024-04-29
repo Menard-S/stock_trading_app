@@ -34,7 +34,7 @@ class User < ApplicationRecord
   end 
 
   def inactive_message 
-    approved? ? super : :not_approved
+    approved? ? :signed_in : :not_approved
   end
 
   private
