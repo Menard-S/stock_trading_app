@@ -58,7 +58,7 @@ class User < ApplicationRecord
   end
 
   def set_default_asset
-    self.asset ||= 0
+    self.asset ||= 0.0
   end
 
   def set_default_role_and_status
