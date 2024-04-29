@@ -34,7 +34,7 @@ class User < ApplicationRecord
   end 
 
   def inactive_message 
-    approved? ? super : :not_approved
+    approved? ? :signed_in : :not_approved
   end
 
   private
@@ -58,7 +58,7 @@ class User < ApplicationRecord
   end
 
   def set_default_asset
-    self.asset ||= 0
+    self.asset ||= 0.0
   end
 
   def set_default_role_and_status
