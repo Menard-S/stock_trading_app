@@ -1,24 +1,21 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Unlock exclusive trading opportunities on EQUISPHERE. Choose from over 10,000 stocks and enjoy the benefits of deep liquidity, round-the-clock support, and excellent APRs.
 
-Things you may want to cover:
+With it:
 
-* Ruby version
+* Admins can invite traders to manually add them to the app
 
-* System dependencies
+* Admins can approve or reject pending trader sign ups
 
-* Configuration
+* Admins can edit and view specific traders to show details
 
-* Database creation
+* Admins can see all the transactions to monitor app usage
 
-* Database initialization
+* Traders can start placing orders once verified
 
-* How to run the test suite
+* Traders can buy and sell stocks
 
-* Services (job queues, cache servers, search engines, etc.)
+* Traders can see gains/losses per stock portfolio
 
-* Deployment instructions
-
-* ...
+* Traders can monitor all transactions made
